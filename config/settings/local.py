@@ -1,13 +1,15 @@
+from pathlib import Path
 from os import getenv, path
 from dotenv import load_dotenv
-from .base import *  # noqa
-from .base import BASE_DIR
 
-
+# Load env first so base settings read the correct values.
+BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 local_env_file = path.join(BASE_DIR, ".envs", ".env.local")
 
 if path.isfile(local_env_file):
-    load_dotenv(local_env_file)
+    load_dotenv(local_env_file, override=True)
+
+from .base import *  # noqa
 
 SECRET_KEY = getenv("SECRET_KEY")
 

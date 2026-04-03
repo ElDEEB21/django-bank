@@ -1,6 +1,5 @@
 from pathlib import Path
-from dotenv import load_dotenv
-from os import getenv, path
+from os import getenv
 from loguru import logger
 from datetime import timedelta, date
 import cloudinary
@@ -9,11 +8,6 @@ import cloudinary
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 
 APPS_DIR = BASE_DIR / "core_apps"
-
-local_env_file = path.join(BASE_DIR, ".envs", ".env.production")
-
-if path.isfile(local_env_file):
-    load_dotenv(local_env_file)
 
 # Application definition
 
@@ -41,9 +35,9 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    # "core_apps.user_auth",
-    # "core_apps.common",
-    # "core_apps.user_profile",
+    "core_apps.user_auth",
+    "core_apps.common",
+    "core_apps.user_profile",
     # "core_apps.accounts",
     # "core_apps.cards",
 ]
@@ -58,7 +52,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "core_apps.user_auth.middleware.CustomHeaderMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -144,7 +137,7 @@ STATIC_ROOT = str(BASE_DIR / "staticfiles")
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-AUTH_USER_MODEL = "user_auth.User"
+# AUTH_USER_MODEL = "user_auth.User"
 DEFAULT_BIRTH_DATE = date(1900, 1, 1)
 DEFAULT_DATE = date(2000, 1, 1)
 DEFAULT_EXPIRY_DATE = date(2024, 1, 1)
@@ -153,7 +146,7 @@ DEFAULT_PHONE_NUMBER = "+250784123456"
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "core_apps.common.cookie_auth.CookieAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -193,7 +186,7 @@ DJOSER = {
     "ACTIVATION_URL": "activate/{uid}/{token}",
     "PASSWORD_RESET_CONFIRM_URL": "password-reset/{uid}/{token}",
     "SERIALIZERS": {
-        "user_create": "core_apps.user_auth.serializers.UserCreateSerializer",
+        "user_create": "djoser.serializers.UserCreateSerializer",
     },
 }
 SPECTACULAR_SETTINGS = {
@@ -285,6 +278,6 @@ logger.configure(**LOGURU_LOGGING)
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "handlers": {"loguru": {"class": "interceptor.InterceptHandler"}},
+    "handlers": {"loguru": {"class": "logging.StreamHandler"}},
     "root": {"handlers": ["loguru"], "level": "DEBUG"},
 }

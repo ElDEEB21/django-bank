@@ -7,7 +7,7 @@ import cloudinary
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 
-APPS_DIR = BASE_DIR / "core_apps"
+APPS_DIR = BASE_DIR / "apps"
 
 # Application definition
 
@@ -35,11 +35,11 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "core_apps.user_auth",
-    "core_apps.common",
-    "core_apps.user_profile",
-    # "core_apps.accounts",
-    # "core_apps.cards",
+    "apps.user_auth",
+    "apps.common",
+    "apps.user_profile",
+    # "apps.accounts",
+    # "apps.cards",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -278,6 +278,6 @@ logger.configure(**LOGURU_LOGGING)
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "handlers": {"loguru": {"class": "logging.StreamHandler"}},
+    "handlers": {"loguru": {"class": "interceptor.InterceptHandler"}},
     "root": {"handlers": ["loguru"], "level": "DEBUG"},
 }
